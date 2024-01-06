@@ -2,6 +2,8 @@
 
 Demo app based on the tutorial: https://docs.streamlit.io/get-started/tutorials/create-an-app
 
+EDA (Exploratory Data Analysis) app based on https://blog.streamlit.io/building-a-streamlit-and-scikit-learn-app-with-chatgpt/ 
+
 ## Basics
 ### Installation
 `pip install streamlit`
