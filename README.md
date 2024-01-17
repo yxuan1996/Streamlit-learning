@@ -388,3 +388,52 @@ After making changes to the user credentials, we need to update the YAML config 
 with open('../config.yaml', 'w') as file:
     yaml.dump(config, file, default_flow_style=False)
 ```
+
+## Geospatial Data Mapping
+#### Folium
+We can use the streamlit-folium library to plot geospatial (mapping) data
+
+```
+pip install streamlit-folium
+```
+
+```python
+import folium
+from streamlit_folium import st_folium
+
+def create_map(Lat, Long, Points):
+
+    m = folium.Map()
+
+    folium.PolyLine(Points, color='red').add_to(m)
+
+    # Zoom to the right level
+    # https://stackoverflow.com/questions/58162200/pre-determine-optimal-level-of-zoom-in-folium
+    sw = [min(Lat), min(Long)]
+    ne = [max(Lat), max(Long)]
+
+    m.fit_bounds([sw, ne])
+
+    return m
+
+# Add Markers to Map
+fg = folium.FeatureGroup(name='Competitors')
+
+fg.add_child(
+    folium.CircleMarker(location=(PointsR[st.session_state['Point_Marker']][0], PointsR[st.session_state['Point_Marker']][1]), radius=3, color='Fuchsia')
+)
+
+st_data = st_folium(m,
+    feature_group_to_add=fg,
+    height=400,
+    width=700,
+)
+```
+
+However, since this library is an external streamlit component, it does not auto-refresh when new markers are added to the map. 
+
+We can force streamlit to auto-refresh the entire page using `st.rerun()` but this is very slow and computationally expensive, so the max refresh rate is around (7-10 seconds)
+
+#### Pydeck
+For some reason pydeck is not rendering the Polyline (PathLayer)
+https://pydeck.gl/gallery/path_layer.html
